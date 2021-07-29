@@ -1,0 +1,33 @@
+				Scan Trace
+				----------
+
+(Implemented by Uday Khedker (uday@cse.iitb.ac.in) for course cs302-2020-21 at
+IIT Bombay).
+
+This directory contains a program that prints the trace of scanning by 
+printing out step no, current state, buffer, last final state, character at
+the marked position, and next character.
+
+Use the command 
+
+    $ ./show-lex-trace.sh file.l < input_file
+
+Alternatively, give the command
+
+    $ ./show-lex-trace.sh file.l 
+
+and type input from the keyboard.
+
+The trace output is indented by one TAB to distinguish it from the default out 
+the lex script. Besides, new lines are replaced by spaces for convenience of
+viewing of the trace.
+
+The program consists of a driver shell script (show-lex-trace.sh) that executes
+lex on th given lex script, then calls a couple of awk scripts (lex-trace.awk 
+and process-lex-dfa.awk), uses a c code template, to generate a binary which is
+then executed to perform scanning and produce the trace of scanning.
+
+All these scripts and templates have to be in the same directory for the program
+to work properly (or the shell script will have to be modified to provide path 
+information).
+

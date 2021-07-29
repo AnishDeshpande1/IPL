@@ -1,0 +1,76 @@
+extern unsigned char yy_ec[256];
+
+extern const int yy_accept[];
+
+static int yy_step = 1;
+char get_character_from_class(unsigned char yyc)
+{
+ 	for (int i=2; i < 256; i++)
+	{
+		if (yy_ec[i] == yyc)
+			return i;
+	}
+	return -1;
+}
+
+char * remove_new_line (char *src)
+{
+	char * tgt = strdup(src);
+	for (int i=0; tgt[i] != '\0'; i++)
+	{
+		if (tgt[i] == '\n')
+			tgt[i] = ' ';
+	}
+	return tgt;
+}
+
+char * get_pattern_for_state(int yys)
+{
+	return action_pattern[yys-1];
+}
+
+int is_valid_accepting_state(int yys)
+{
+	assert ((yys >1) && (yys <= state_count)); 	
+	if (get_pattern_for_state(yys-1) != NULL)
+		return 1;
+	else 
+		return 0;
+}
+
+void print_lex_trace(unsigned char yyc, char *yybp, char *yympos, int yycs, int yylas)
+{
+	if (yyc!=0)
+	{
+		printf ("\tStep No. %d. ",yy_step++);
+		printf ("Buffer:\"%s\"\t", remove_new_line(yybp));
+		if (yycs == 1)
+		{
+			printf ("State:START\t");
+			printf ("LFState:NONE\t");
+			printf ("MPos Char:NONE\t");
+		}
+		else
+		{
+			printf ("State:%d\t", yycs);
+			if (yycs < 9)
+				printf ("\t");
+			if (is_valid_accepting_state(yylas))
+			{
+				printf ("LFState:%d (accepts pattern `%s')\t", yylas, get_pattern_for_state(yylas));
+				printf ("MPos Char:`%c\'\t", *yympos);
+			}
+			else
+			{
+				printf ("LFState:NONE\t");
+				printf ("MPos Char:NONE\t");
+			}
+		}
+		if (yyc > 1)
+			printf ("NChar:`%c\'\n", get_character_from_class(yyc));
+		else 
+		{ 	assert(yyc == 1);
+			printf ("NChar: Ignore\n");
+		}
+	}
+}
